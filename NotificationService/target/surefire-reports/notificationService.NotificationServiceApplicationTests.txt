@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: notificationService.NotificationServiceApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.241 s -- in notificationService.NotificationServiceApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.885 s -- in notificationService.NotificationServiceApplicationTests

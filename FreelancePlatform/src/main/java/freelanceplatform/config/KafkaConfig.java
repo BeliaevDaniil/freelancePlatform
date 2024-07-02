@@ -1,57 +1,61 @@
 package freelanceplatform.config;
 
-import org.apache.kafka.clients.admin.NewTopic;
+import jakarta.annotation.PostConstruct;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 
-import static freelanceplatform.kafka.topics.TaskChangesTopic.*;
-import static freelanceplatform.kafka.topics.UserChangesTopic.UserCreated;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class KafkaConfig {
 
-    /**
-     * Creates kafka topic for user creation
-     * @return
-     */
-    @Bean
-    public NewTopic userCreatedTopic() {
-        return TopicBuilder.name(UserCreated.name())
-                .build();
-    }
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
-    /**
-     * Creates kafka topic for new task creation
-     * @return
-     */
-    @Bean
-    public NewTopic taskPostedTopic() {
-        return TopicBuilder.name(TaskPosted.name())
-                .build();
-    }
+    @Value("${spring.kafka.properties.sasl.jaas.config}")
+    private String jaasConfig;
 
-    @Bean
-    public NewTopic freelancerAssignedTopic(){
-        return TopicBuilder.name(FreelancerAssigned.name())
-                .build();
+    @Value("${spring.kafka.properties.sasl.mechanism}")
+    private String saslMechanism;
+
+    @Value("${spring.kafka.properties.security.protocol}")
+    private String securityProtocol;
+
+    @Value("${spring.kafka.properties.session.timeout.ms}")
+    private String sessionTimeoutMs;
+
+    @PostConstruct
+    public void init() {
+        System.out.println("Bootstrap servers: " + bootstrapServers);
+        System.out.println("JAAS Config: " + jaasConfig);
+        System.out.println("SASL Mechanism: " + saslMechanism);
+        System.out.println("Security Protocol: " + securityProtocol);
+        System.out.println("Session Timeout: " + sessionTimeoutMs);
     }
 
     @Bean
-    public NewTopic TaskAcceptedTopic(){
-        return TopicBuilder.name(TaskAccepted.name())
-                .build();
+    public ProducerFactory<String, String> producerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put("sasl.jaas.config", jaasConfig);
+        configProps.put("sasl.mechanism", saslMechanism);
+        configProps.put("security.protocol", securityProtocol);
+        configProps.put("session.timeout.ms", sessionTimeoutMs);
+        return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
-    public NewTopic freelancerRemovedTopic(){
-        return TopicBuilder.name(FreelancerRemoved.name())
-                .build();
+    public KafkaTemplate<String, String> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
     }
 
-    @Bean
-    public NewTopic taskSendOnReviewTopic(){
-        return TopicBuilder.name(TaskSendOnReview.name())
-                .build();
-    }
 }
