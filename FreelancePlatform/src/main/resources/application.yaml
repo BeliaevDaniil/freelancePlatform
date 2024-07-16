@@ -7,10 +7,18 @@ spring:
     show-sql: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/mydatabase
-    username: myuser
-    password: secret
+    url: jdbc:postgresql://dpg-cqb8512j1k6c73anj6e0-a.frankfurt-postgres.render.com:5432/nss_production
+    username: nss_production_user
+    password: q1BX2vwaiuR14DNFfq9jmCAR2i2fkooX
   kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    bootstrap-servers: pkc-75m1o.europe-west3.gcp.confluent.cloud:9092
+    properties:
+      sasl:
+        mechanism: PLAIN
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username='NXXQHH3T6BDROHIX' password='sTA+qdIfwtH7jHlznzkEIoWZ4GRNduAq7KKW3AhYBzf1WS0qKCqe6o2lQwbxBph5';
+      security:
+        protocol: SASL_SSL
+      session:
+        timeout:
+          ms: 45000
