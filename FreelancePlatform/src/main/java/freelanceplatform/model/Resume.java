@@ -1,23 +1,30 @@
 package freelanceplatform.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
 
-@Data
+import java.sql.Types;
+
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Data
 public class Resume extends AbstractEntity{
 
     @Column(nullable = false)
     private String filename;
 
-    @Lob
-    @Column(nullable = false)
+    @Column
+//    or @JdbcType(VarbinaryJdbcType.class)
+    @JdbcTypeCode(Types.BINARY)
     private byte[] content;
 
-    @OneToOne(mappedBy = "resume")
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
-
 }

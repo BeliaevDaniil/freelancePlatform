@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: FreelancePlatform
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://pg-23908f36-stskovalchuk-5e6f.e.aivencloud.com:26185/defaultdb
+    username: avnadmin
+    password: AVNS_CFKlOW6MPWhx7lRowWi
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
